@@ -130,8 +130,9 @@
     // set slide dimensions
     [].forEach.call(_.slides, function (__) {
       __.style.height = 'auto'
-      __.style.width = _.itemWidth + 'px'
-      width += _.itemWidth
+      __.style.width = 'auto'
+      _.itemWidth = __.offsetWidth
+      width += __.offsetWidth
       height = Math.max(__.offsetHeight, height)
     })
 
@@ -232,12 +233,20 @@
       if (arrow) {
         if (typeof arrow === 'string') arrow = document.querySelector(arrow)
         arrow._func = arrow._func || _.scrollItem.bind(_, direction)
-        _.event(arrow, 'remove', {
-          click: arrow._func
-        })
-        _.event(arrow, 'add', {
-          click: arrow._func
-        })
+        _.event(
+          document.querySelector(_.opt.arrows[direction] + ' button'),
+          'remove',
+          {
+            click: arrow._func
+          }
+        )
+        _.event(
+          document.querySelector(_.opt.arrows[direction] + ' button'),
+          'add',
+          {
+            click: arrow._func
+          }
+        )
         _.arrows[direction] = arrow
       }
     })
@@ -250,20 +259,14 @@
       event.stopPropagation()
     }
 
-    var disableArrows = _.containerWidth >= _.trackWidth
-
     if (!_.opt.rewind) {
       if (_.arrows.prev) {
-        _.arrows.prev.classList.toggle(
-          'disabled',
-          _.ele.scrollLeft <= 0 || disableArrows
-        )
+        _.arrows.prev.classList.toggle('d-none', _.ele.scrollLeft <= 0)
       }
       if (_.arrows.next) {
         _.arrows.next.classList.toggle(
-          'disabled',
-          Math.ceil(_.ele.scrollLeft + _.containerWidth) >=
-            Math.floor(_.trackWidth) || disableArrows
+          'd-none',
+          _.ele.scrollLeft + 10 >= _.ele.scrollWidth - _.containerWidth
         )
       }
     }

@@ -3,6 +3,9 @@
   margin: 0 auto;
   position: relative;
 }
+.d-none {
+  display: none;
+}
 .glider {
   margin: 0 auto;
   position: relative;
