@@ -109,20 +109,6 @@
     var breakpointChanged = _.settingsBreakpoint()
     if (!paging) paging = breakpointChanged
 
-    if (
-      _.opt.slidesToShow === 'auto' ||
-      typeof _.opt._autoSlide !== 'undefined'
-    ) {
-      var slideCount = _.containerWidth / _.opt.itemWidth
-
-      _.opt._autoSlide = _.opt.slidesToShow = _.opt.exactWidth
-        ? slideCount
-        : Math.floor(slideCount)
-    }
-    if (_.opt.slidesToScroll === 'auto') {
-      _.opt.slidesToScroll = Math.floor(_.opt.slidesToShow)
-    }
-
     _.itemWidth = _.opt.exactWidth
       ? _.opt.itemWidth
       : _.containerWidth / _.opt.slidesToShow;
@@ -142,6 +128,20 @@
     _.preventClick = false
 
     _.opt.resizeLock && _.scrollTo(_.slide * _.itemWidth, 0)
+
+    if (
+      _.opt.slidesToShow === 'auto' ||
+      typeof _.opt._autoSlide !== 'undefined'
+    ) {
+      var slideCount = Math.floor(_.containerWidth / _.itemWidth)
+
+      _.opt._autoSlide = slideCount
+    } else {
+      _.opt._autoSlide = _.opt.slidesToShow
+    }
+    if (_.opt.slidesToScroll === 'auto') {
+      _.opt.slidesToScroll = _.opt._autoSlide
+    }
 
     if (breakpointChanged || paging) {
       _.bindArrows()
@@ -207,7 +207,7 @@
     _.dots.innerHTML = ''
     _.dots.classList.add('glider-dots')
 
-    for (var i = 0; i < Math.ceil(_.slides.length / _.opt.slidesToShow); ++i) {
+    for (var i = 0; i < Math.ceil(_.slides.length / _.opt._autoSlide); ++i) {
       var dot = document.createElement('button')
       dot.dataset.index = i
       dot.setAttribute('aria-label', 'Page ' + (i + 1))
@@ -274,10 +274,10 @@
     _.slide = Math.round(_.ele.scrollLeft / _.itemWidth)
     _.page = Math.round(_.ele.scrollLeft / _.containerWidth)
 
-    var middle = _.slide + Math.floor(Math.floor(_.opt.slidesToShow) / 2)
+    var middle = _.slide + Math.floor(Math.floor(_.opt._autoSlide) / 2)
 
-    var extraMiddle = Math.floor(_.opt.slidesToShow) % 2 ? 0 : middle + 1
-    if (Math.floor(_.opt.slidesToShow) === 1) {
+    var extraMiddle = Math.floor(_.opt._autoSlide) % 2 ? 0 : middle + 1
+    if (Math.floor(_.opt._autoSlide) === 1) {
       extraMiddle = 0
     }
 
@@ -361,7 +361,7 @@
         var backwards = slide === 'prev'
 
         // use precise location if fractional slides are on
-        if (_.opt.slidesToScroll % 1 || _.opt.slidesToShow % 1) {
+        if (_.opt.slidesToScroll % 1 || _.opt._autoSlide % 1) {
           slide = _.round(_.ele.scrollLeft / _.itemWidth)
         } else {
           slide = _.slide
