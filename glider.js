@@ -264,10 +264,12 @@
         _.arrows.prev.classList.toggle('d-none', _.ele.scrollLeft <= 0)
       }
       if (_.arrows.next) {
-        _.arrows.next.classList.toggle(
-          'd-none',
-          _.ele.scrollLeft + 10 >= _.ele.scrollWidth - _.containerWidth
-        )
+        setTimeout(function () {
+          _.arrows.next.classList.toggle(
+            'd-none',
+            _.ele.scrollLeft + 10 >= _.ele.scrollWidth - _.containerWidth
+          )
+        }, 300)
       }
     }
 
