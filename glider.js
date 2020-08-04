@@ -250,6 +250,7 @@
         _.arrows[direction] = arrow
       }
     })
+    _.arrows.next.classList.add('d-none')
   }
 
   gliderPrototype.updateControls = function (event) {
