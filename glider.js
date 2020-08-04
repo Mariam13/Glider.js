@@ -118,7 +118,7 @@
       __.style.height = 'auto'
       __.style.width = 'auto'
       _.itemWidth = __.offsetWidth
-      width += __.offsetWidth
+      width = _.itemWidth
       height = Math.max(__.offsetHeight, height)
     })
 
@@ -250,6 +250,7 @@
         _.arrows[direction] = arrow
       }
     })
+    _.arrows.next.classList.add('d-none')
   }
 
   gliderPrototype.updateControls = function (event) {
